@@ -8,6 +8,10 @@ class FinanceViewModel {
     func addFinanceData(financeData: FinanceModel) {
         self.financeData.append(financeData)
     }
+
+    func clearAllFinanceData() {
+        financeData.removeAll()
+    }
     func showLastWeekSummary() -> String {
         let lastWeek = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())!
         let lastWeekFinanceData = financeData.filter { $0.date >= lastWeek && $0.date < Date() }

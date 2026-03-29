@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct FinanceTrackerView: View {
-    private var financeViewModel = FinanceViewModel()
+    @State private var financeViewModel: FinanceViewModel = {
+        let vm = FinanceViewModel()
+        vm.financeData = sampleFinanceData
+        return vm
+    }()
 
     let columns = [
         GridItem(.flexible()),
@@ -17,12 +21,38 @@ struct FinanceTrackerView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                NavigationCard(title:"This week's summary", icon: "chart.bar.fill", color: .black)
-                    .padding(20)
+                NavigationLink {
+                    WeekSummary(financeData: financeViewModel.financeData)
+                } label: {
+                    NavigationCard(title: "This week's summary", icon: "chart.bar.fill", color: .black)
+                }
+                .buttonStyle(.plain)
+                .padding(20)
                 LazyVGrid(columns: columns, spacing: 10) {
-                    NavigationCard(title: "View All Finances", icon: "dollarsign.circle", color: .green)
-                    NavigationCard(title: "Add New Finance Data", icon: "plus.circle", color: .red)
-                    NavigationCard(title: "Settings", icon: "gearshape", color: .blue)
+                    NavigationLink {
+                        AllFinances(financeViewModel: financeViewModel)
+                    } label: {
+                        NavigationCard(title: "View All Finances", icon: "dollarsign.circle.fill", color: .green)
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink {
+                        EnterFinancialData(financeViewModel: financeViewModel)
+                    } label: {
+                        NavigationCard(title: "Enter Financial Data", icon: "plus.circle.fill", color: .red)
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink {
+                        HowAmIDoingView(financeViewModel: financeViewModel)
+                    } label: {
+                        NavigationCard(title: "How am I doing?", icon: "figure.walk.circle.fill", color: .yellow)
+                    }
+                    .buttonStyle(.plain)
+                    NavigationLink {
+                        SettingsView(financeViewModel: financeViewModel)
+                    } label: {
+                        NavigationCard(title: "Settings", icon: "gear.circle.fill", color: .blue)
+                    }
+                    .buttonStyle(.plain)
                 }
                 .padding(20)
             }
